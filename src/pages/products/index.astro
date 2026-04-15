@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import { getCollection } from 'astro:content';
+import { getSettings } from '../../lib/settings';
+
+const settings = await getSettings();
+
+// Fetch all published products from Content Collections
+const allProducts = await getCollection('products', ({ data }) => data.published);
+// Sort by order
+const products = allProducts.sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+// Get all categories
+const categories = [...new Set(products.map(p => p.data.category))];
+---
+
+<BaseLayout title="Products" description="Browse our product portfolio and find the right solution for your needs" settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- Page Header -->
+  <section class="bg-gradient-to-br from-primary-50 to-white py-12 md:py-20">
+    <div class="container-custom">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-4">
+          Products
+        </h1>
+        <p class="text-lg text-secondary-600">
+          Browse our product portfolio and find the right solution for your needs
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section class="section">
+    <div class="container-custom">
+      <!-- Category Filter -->
+      {categories.length > 1 && (
+        <div class="flex flex-wrap justify-center gap-3 mb-10">
+          <a href="/products" class="px-4 py-2 rounded-full text-sm font-medium bg-primary-600 text-white">
+            All
+          </a>
+          {categories.map((cat) => (
+            <a href={`/products?category=${encodeURIComponent(cat)}`} class="px-4 py-2 rounded-full text-sm font-medium bg-secondary-100 text-secondary-600 hover:bg-secondary-200 transition-colors">
+              {cat}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {products.map((product) => (
+          <a href={`/products/${product.id}`} class="card group hover:shadow-lg transition-all duration-300 block">
+            {/* Product Image */}
+            {product.data.coverImage ? (
+              <div class="h-48 overflow-hidden">
+                <img
+                  src={product.data.coverImage}
+                  alt={product.data.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            ) : (
+              <div class="h-48 bg-gradient-to-br from-primary-100 to-primary-50 flex items-center justify-center">
+                <svg class="w-16 h-16 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+            )}
+
+            <div class="p-6">
+              {/* Category Badge */}
+              <span class="inline-block px-3 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full mb-3">
+                {product.data.category}
+              </span>
+
+              <h3 class="text-xl font-semibold text-secondary-900 mb-2 group-hover:text-primary-600 transition-colors">
+                {product.data.title}
+              </h3>
+              <p class="text-secondary-600 mb-4 line-clamp-2">{product.data.description}</p>
+
+              {/* Features */}
+              {product.data.features.length > 0 && (
+                <ul class="space-y-2 mb-6">
+                  {product.data.features.slice(0, 3).map((feature) => (
+                    <li class="flex items-center text-sm text-secondary-600">
+                      <svg class="w-4 h-4 text-primary-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* CTA */}
+              <span class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium">
+                View Details
+                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-secondary-50">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-3xl font-bold text-secondary-900 mb-4">
+          Can't Find What You're Looking For?
+        </h2>
+        <p class="text-lg text-secondary-600 mb-8">
+          We offer customized solutions and can develop bespoke products tailored to your specific requirements.
+          Contact us and our professional team will provide you with the right solution.
+        </p>
+        <a href="/contact" class="btn-primary text-lg px-8 py-4">
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

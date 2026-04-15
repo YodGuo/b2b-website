@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import { getSettings } from '../lib/settings';
+
+const settings = await getSettings();
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://yourdomain.com';
+
+const faqs = [
+  {
+    question: 'What is your minimum order quantity (MOQ)?',
+    answer: 'Our MOQ varies by product. Generally, we require a minimum of 100-500 units per order. For customized products, the MOQ may be higher. Please contact us for specific product MOQ details.',
+  },
+  {
+    question: 'What is the typical lead time for orders?',
+    answer: 'Standard orders typically take 15-30 business days to produce. Customized or large orders may require 30-60 days. We will provide an accurate lead time when you submit your inquiry.',
+  },
+  {
+    question: 'Do you offer OEM/ODM services?',
+    answer: 'Yes, we offer both OEM (Original Equipment Manufacturing) and ODM (Original Design Manufacturing) services. Our experienced R&D team can help develop custom products based on your specifications and requirements.',
+  },
+  {
+    question: 'What quality certifications do your products have?',
+    answer: 'Our products comply with international quality standards including ISO 9001, CE, RoHS, and other industry-specific certifications. Detailed certification documents are available upon request.',
+  },
+  {
+    question: 'What payment methods do you accept?',
+    answer: 'We accept T/T (Telegraphic Transfer), L/C (Letter of Credit), Western Union, and PayPal for sample orders. Standard payment terms are 30% deposit and 70% before shipment.',
+  },
+  {
+    question: 'Do you provide samples before bulk orders?',
+    answer: 'Yes, we can provide samples for quality evaluation. Sample fees may apply and are typically refundable against your first bulk order. Sample delivery usually takes 5-10 business days.',
+  },
+  {
+    question: 'What is your warranty policy?',
+    answer: 'We offer a 12-24 month warranty on our products, depending on the product type. During the warranty period, we will provide free repair or replacement for defective products caused by manufacturing issues.',
+  },
+  {
+    question: 'How do you handle shipping and logistics?',
+    answer: 'We work with reliable international shipping companies and can arrange delivery by sea, air, or express (DHL, FedEx, UPS). We handle all export documentation and can ship to FOB, CIF, or DDP terms.',
+  },
+];
+
+// FAQPage JSON-LD
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer,
+    },
+  })),
+};
+
+// Breadcrumb JSON-LD
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": siteUrl,
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "FAQ",
+      "item": `${siteUrl}/faq`,
+    },
+  ],
+};
+---
+
+<BaseLayout title="FAQ - Frequently Asked Questions" description="Find answers to common questions about our products, ordering, shipping, and more." settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+
+  <!-- Page Header -->
+  <section class="bg-gradient-to-br from-primary-50 to-white py-12 md:py-20">
+    <div class="container-custom">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-4">
+          Frequently Asked Questions
+        </h1>
+        <p class="text-lg text-secondary-600">
+          Find answers to common questions about our products and services
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto space-y-4">
+        {faqs.map((faq, index) => (
+          <details class="card group" open={index < 3}>
+            <summary class="flex items-center justify-between cursor-pointer p-6 list-none">
+              <h3 class="text-lg font-semibold text-secondary-900 pr-4">{faq.question}</h3>
+              <svg class="w-5 h-5 text-secondary-400 flex-shrink-0 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-6">
+              <p class="text-secondary-600 leading-relaxed">{faq.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-primary-600">
+    <div class="container-custom text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">Still Have Questions?</h2>
+      <p class="text-lg text-primary-100 mb-8">
+        Our team is ready to help. Contact us for personalized assistance.
+      </p>
+      <a href="/contact" class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-colors">
+        Contact Us
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

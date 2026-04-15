@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import { getSettings } from '../lib/settings';
+
+const settings = await getSettings();
+---
+
+<BaseLayout title="Terms of Service" description="Terms and conditions for the use of this website" settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- Page Header -->
+  <section class="bg-gradient-to-br from-primary-50 to-white py-12 md:py-20">
+    <div class="container-custom">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-4">Terms of Service</h1>
+        <p class="text-lg text-secondary-600">Last Updated: April 14, 2026</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="section">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto prose prose-lg prose-secondary">
+
+        <h2 class="text-2xl font-bold text-secondary-900 mt-0 mb-4">1. Acceptance of Terms</h2>
+        <p class="text-secondary-600 mb-6">
+          By accessing and using this website (hereinafter referred to as "the Site"), you agree to comply with the following terms of service (hereinafter referred to as "these Terms"). If you do not agree to any part of these Terms, please discontinue use of the Site immediately. We reserve the right to modify these Terms at any time. Modified terms will take effect immediately upon publication on this page. Continued use of the Site constitutes acceptance of the modified terms.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">2. Website Content</h2>
+        <p class="text-secondary-600 mb-4">Product information, technical specifications, images, and other content displayed on the Site are for reference only and may be subject to update delays. We reserve the right to modify product specifications and prices at any time without prior notice. Actual product specifications shall be subject to the final contract and shipping list.</p>
+        <p class="text-secondary-600 mb-6">
+          We make every effort to ensure the accuracy of website content, but do not make any express or implied warranties regarding the completeness, accuracy, or timeliness of the content.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">3. Intellectual Property</h2>
+        <p class="text-secondary-600 mb-6">
+          All content on the Site, including but not limited to text, images, charts, logos, designs, and software code, is protected by copyright, trademark, and other intellectual property laws. Without our prior written permission, you may not copy, modify, distribute, display, publish, or otherwise use any content on the Site in any manner, except for the following:
+        </p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li>Browsing and temporary caching for personal, non-commercial purposes</li>
+          <li>Reproduction or citation with our explicit authorization (with proper attribution)</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">4. Inquiries and Transactions</h2>
+        <p class="text-secondary-600 mb-4">
+          By submitting an inquiry form through the Site, you indicate your intention to establish a business relationship with us. Please note:
+        </p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li>Submission of an inquiry does not constitute a legally binding offer or commitment</li>
+          <li>Specific transaction terms (price, delivery time, payment method, etc.) shall be subject to the formal contract signed by both parties</li>
+          <li>We reserve the right to decline any inquiry without providing a reason</li>
+          <li>Inquiry information will be kept confidential and used solely for business communication purposes</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">5. User Conduct</h2>
+        <p class="text-secondary-600 mb-4">When using the Site, you agree not to:</p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li>Submit false, misleading, or fraudulent inquiry information</li>
+          <li>Use automated tools (bots, crawlers, etc.) to submit forms in bulk or scrape content</li>
+          <li>Post comments containing illegal, harmful, threatening, defamatory, or infringing content</li>
+          <li>Attempt to access the Site's admin panel or server systems without authorization</li>
+          <li>Interfere with or disrupt the normal operation of the Site</li>
+          <li>Reverse-engineer, decompile, or otherwise attempt to obtain the source code of the Site</li>
+          <li>Bypass the Site's security measures (including Cloudflare Turnstile CAPTCHA)</li>
+        </ul>
+        <p class="text-secondary-600 mb-6">
+          In the event of a violation of the above rules, we reserve the right to restrict or prohibit your access to the Site without prior notice and to pursue legal liability.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">6. Comments and User-Generated Content</h2>
+        <p class="text-secondary-600 mb-6">
+          Comments you post on the Site's news articles represent your personal views and do not reflect the position of the Site. We reserve the right to review, edit, or delete any comments. By posting a comment, you grant us a non-exclusive, royalty-free, worldwide license to use, display, and distribute your comment content within the scope of the Site.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">7. Disclaimer</h2>
+        <p class="text-secondary-600 mb-4">To the maximum extent permitted by law:</p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li>The Site is provided on an "as is" basis without any express or implied warranties of any kind</li>
+          <li>We shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Site</li>
+          <li>The Site may contain links to third-party websites or services; we assume no responsibility for the content, privacy policies, or practices of such external websites</li>
+          <li>We shall not be liable for service interruptions caused by force majeure events (natural disasters, network failures, system maintenance, etc.)</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">8. Limitation of Liability</h2>
+        <p class="text-secondary-600 mb-6">
+          For any dispute arising from or related to these Terms, our total liability shall not exceed the actual amount you have paid to us during your use of the Site's services (if any), or CNY 1,000, whichever is greater.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">9. Governing Law and Dispute Resolution</h2>
+        <p class="text-secondary-600 mb-6">
+          These Terms shall be governed by and construed in accordance with the laws of the People's Republic of China. Any dispute arising from or in connection with these Terms shall first be resolved through friendly negotiation between the parties. If negotiation fails, either party may submit the dispute to the competent people's court at the location of the company for resolution.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">10. Severability</h2>
+        <p class="text-secondary-600 mb-6">
+          If any provision of these Terms is held to be invalid or unenforceable by a court of competent jurisdiction, such provision shall be modified or deleted to the minimum extent necessary, and the remaining provisions shall continue in full force and effect.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">11. Contact Information</h2>
+        <p class="text-secondary-600 mb-6">
+          If you have any questions regarding these Terms, please contact us through the following channels:
+        </p>
+        <ul class="list-none text-secondary-600 space-y-2 mb-6">
+          <li>Email: <a href="mailto:legal@yourcompany.com" class="text-primary-600 hover:underline">legal@yourcompany.com</a></li>
+          <li>Or submit your request via our <a href="/contact" class="text-primary-600 hover:underline">Contact page</a></li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+</BaseLayout>

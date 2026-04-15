@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import { getCollection } from 'astro:content';
+import { getSettings } from '../../lib/settings';
+
+const settings = await getSettings();
+
+// Fetch all published news from Content Collections
+const allNews = await getCollection('news', ({ data }) => data.published);
+// Sort by publish date in descending order
+const newsList = allNews.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+
+// Get all categories
+const categories = [...new Set(newsList.map(n => n.data.category))];
+---
+
+<BaseLayout title="News" description="Stay up to date with our latest news and industry insights" settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- Page Header -->
+  <section class="bg-gradient-to-br from-primary-50 to-white py-12 md:py-20">
+    <div class="container-custom">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-4">
+          News
+        </h1>
+        <p class="text-lg text-secondary-600">
+          Stay up to date with our latest news and industry insights
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- News List -->
+  <section class="section">
+    <div class="container-custom">
+      <!-- Category Filter -->
+      {categories.length > 1 && (
+        <div class="flex flex-wrap justify-center gap-3 mb-10">
+          <a href="/news" class="px-4 py-2 rounded-full text-sm font-medium bg-primary-600 text-white">
+            All
+          </a>
+          {categories.map((cat) => (
+            <a href={`/news?category=${encodeURIComponent(cat)}`} class="px-4 py-2 rounded-full text-sm font-medium bg-secondary-100 text-secondary-600 hover:bg-secondary-200 transition-colors">
+              {cat}
+            </a>
+          ))}
+        </div>
+      )}
+
+      {newsList.length === 0 ? (
+        <div class="text-center py-12">
+          <p class="text-secondary-500">No news available</p>
+        </div>
+      ) : (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {newsList.map((newsItem) => (
+            <a href={`/news/${newsItem.id}`} class="card group hover:shadow-lg transition-shadow block">
+              {newsItem.data.coverImage ? (
+                <div class="h-48 overflow-hidden">
+                  <img
+                    src={newsItem.data.coverImage}
+                    alt={newsItem.data.title}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <div class="w-full h-48 bg-gradient-to-br from-primary-100 to-primary-50 flex items-center justify-center">
+                  <svg class="w-12 h-12 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
+                </div>
+              )}
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="px-3 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full">
+                    {newsItem.data.category}
+                  </span>
+                  <time class="text-sm text-secondary-400">
+                    {newsItem.data.publishDate.toLocaleDateString('en-US')}
+                  </time>
+                </div>
+                <h3 class="text-xl font-semibold text-secondary-900 group-hover:text-primary-600 transition-colors mb-2">
+                  {newsItem.data.title}
+                </h3>
+                <p class="text-secondary-600 line-clamp-2">{newsItem.data.description}</p>
+                <div class="flex items-center text-primary-600 mt-4">
+                  <span>Read More</span>
+                  <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

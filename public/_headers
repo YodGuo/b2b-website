@@ -1,0 +1,40 @@
+# Security headers
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  # Content-Security-Policy
+  # - default-src 'self': 仅允许同源资源
+  # - script-src: 允许内联脚本（Astro/React 需要）+ Cloudflare Turnstile
+  # - style-src: 允许内联样式（Tailwind 需要）
+  # - font-src: 允许同源字体 + Google Fonts（如有）
+  # - img-src: 允许同源 + data: URI + 任何 https 图片（产品图/新闻图可能来自 R2 或 CDN）
+  # - connect-src: 允许同源 + Cloudflare Turnstile API
+  # - frame-src: 仅允许 Cloudflare Turnstile iframe
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com;
+
+# Cache static assets
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache images
+/*.jpg
+  Cache-Control: public, max-age=2592000
+/*.png
+  Cache-Control: public, max-age=2592000
+/*.webp
+  Cache-Control: public, max-age=2592000
+/*.svg
+  Cache-Control: public, max-age=2592000
+
+# Cache sitemap (regenerate daily)
+/sitemap.xml
+  Cache-Control: public, max-age=86400, stale-while-revalidate=3600
+
+# Don't cache HTML pages
+/*.html
+  Cache-Control: no-cache
+/
+  Cache-Control: no-cache

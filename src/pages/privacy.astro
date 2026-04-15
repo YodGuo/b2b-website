@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import { getSettings } from '../lib/settings';
+
+const settings = await getSettings();
+---
+
+<BaseLayout title="Privacy Policy" description="Learn how we collect, use, and protect your personal information" settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- Page Header -->
+  <section class="bg-gradient-to-br from-primary-50 to-white py-12 md:py-20">
+    <div class="container-custom">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-4">Privacy Policy</h1>
+        <p class="text-lg text-secondary-600">Last Updated: April 14, 2026</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <section class="section">
+    <div class="container-custom">
+      <div class="max-w-3xl mx-auto prose prose-lg prose-secondary">
+
+        <h2 class="text-2xl font-bold text-secondary-900 mt-0 mb-4">1. Information Collection</h2>
+        <p class="text-secondary-600 mb-4">
+          When you use our website services, we may collect the following types of personal information:
+        </p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li><strong>Inquiry Form Information</strong>: Company name, contact person name, email address, phone number, country/region, product requirements, message content</li>
+          <li><strong>Comment Information</strong>: Nickname, email address (optional), comment content</li>
+          <li><strong>Automatically Collected Information</strong>: IP address, browser type, visit time, page browsing history (via Cloudflare Analytics)</li>
+          <li><strong>Uploaded Files</strong>: Attachments you upload via the inquiry form (images, documents, etc.), stored in Cloudflare R2</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">2. Information Usage</h2>
+        <p class="text-secondary-600 mb-4">The information we collect is used for the following purposes:</p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li>Processing and responding to your inquiry requests</li>
+          <li>Managing comment moderation and display</li>
+          <li>Improving website user experience and functionality</li>
+          <li>Sending product updates and promotional information (only with your consent)</li>
+          <li>Complying with legal and regulatory requirements</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">3. Information Protection</h2>
+        <p class="text-secondary-600 mb-4">
+          We take reasonable technical and administrative measures to protect your personal information:
+        </p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li>All data transmission is encrypted using HTTPS/TLS</li>
+          <li>Admin panel uses password + HMAC-SHA256 signed Cookie authentication</li>
+          <li>Database is hosted on Cloudflare D1, protected by Cloudflare's security infrastructure</li>
+          <li>File storage is on Cloudflare R2 with hotlink protection enabled</li>
+          <li>Form submissions are protected by Cloudflare Turnstile CAPTCHA to prevent malicious submissions</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">4. Information Sharing</h2>
+        <p class="text-secondary-600 mb-4">
+          We do not sell, trade, or otherwise transfer your personal information to external third parties, except:
+        </p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li>With your explicit consent</li>
+          <li>To complete inquiry processing, where sharing with relevant business partners (e.g., logistics, payment) is necessary</li>
+          <li>When required by laws, regulations, or government authorities</li>
+          <li>To protect the rights, property, or safety of our company, users, or the public</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">5. Cookie Usage</h2>
+        <p class="text-secondary-600 mb-4">This website uses the following types of cookies:</p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li><strong>Authentication Cookies</strong>: Used for admin panel login sessions (HMAC-SHA256 signed, 7-day validity)</li>
+          <li><strong>Cloudflare Cookies</strong>: Functional cookies required by Cloudflare CDN and security services (e.g., Turnstile)</li>
+        </ul>
+        <p class="text-secondary-600 mb-6">
+          We do not use third-party tracking cookies (such as Google Analytics, advertising trackers, etc.).
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">6. Data Storage and Retention</h2>
+        <p class="text-secondary-600 mb-6">
+          Your data is stored on Cloudflare's global infrastructure. Inquiry records and comment data will be retained until you request deletion or until they are no longer needed for business purposes. Uploaded attachment files will be retained for 90 days after inquiry processing is completed, after which they will be automatically purged.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">7. Your Rights</h2>
+        <p class="text-secondary-600 mb-4">You have the following rights regarding your personal information:</p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li><strong>Right of Access</strong>: You may request to view the personal information we hold about you</li>
+          <li><strong>Right of Correction</strong>: You may request correction of inaccurate information</li>
+          <li><strong>Right of Deletion</strong>: You may request deletion of your personal information</li>
+          <li><strong>Right to Withdraw Consent</strong>: You may withdraw your consent to data processing at any time</li>
+        </ul>
+        <p class="text-secondary-600 mb-6">
+          To exercise any of the above rights, please contact us at: <a href="mailto:privacy@yourcompany.com" class="text-primary-600 hover:underline">privacy@yourcompany.com</a>
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">8. Third-Party Services</h2>
+        <p class="text-secondary-600 mb-4">This website uses the following third-party services:</p>
+        <ul class="list-disc pl-6 text-secondary-600 space-y-2 mb-6">
+          <li><strong>Cloudflare</strong> — CDN, security protection, CAPTCHA, database, object storage, message queues</li>
+          <li><strong>Telegram</strong> — Inquiry and comment notification push</li>
+          <li><strong>WeCom</strong> — Inquiry and comment notification push</li>
+          <li><strong>Resend / Mailchannels</strong> — Email notification delivery</li>
+        </ul>
+        <p class="text-secondary-600 mb-6">
+          These services may process some of your data to provide their services. Please refer to each service's privacy policy for details.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">9. Policy Updates</h2>
+        <p class="text-secondary-600 mb-6">
+          We may update this privacy policy from time to time. Updated policies will be published on this page with a revised "Last Updated" date. We recommend that you review this page periodically to stay informed of our latest privacy protection measures.
+        </p>
+
+        <h2 class="text-2xl font-bold text-secondary-900 mb-4">10. Contact Us</h2>
+        <p class="text-secondary-600 mb-6">
+          If you have any questions or suggestions regarding this privacy policy, please contact us through the following channels:
+        </p>
+        <ul class="list-none text-secondary-600 space-y-2 mb-6">
+          <li>Email: <a href="mailto:privacy@yourcompany.com" class="text-primary-600 hover:underline">privacy@yourcompany.com</a></li>
+          <li>Or submit your request via our <a href="/contact" class="text-primary-600 hover:underline">Contact page</a></li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+</BaseLayout>

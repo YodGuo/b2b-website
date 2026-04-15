@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import { getSettings } from '../lib/settings';
+
+const settings = await getSettings();
+
+// Organization JSON-LD structured data
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://yourdomain.com';
+
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Company",
+  "url": siteUrl,
+  "logo": `${siteUrl}/logo.png`,
+  "description": "Professional B2B Solutions Provider",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "CN",
+    "addressLocality": "Shenzhen",
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+86-400-XXX-XXXX",
+    "contactType": "sales",
+    "availableLanguage": ["Chinese", "English"],
+  },
+};
+
+// WebSite JSON-LD with SearchAction (for Pagefind)
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Company",
+  "url": siteUrl,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": `${siteUrl}?search={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
+const features = [
+  {
+    icon: '🎯',
+    title: 'Premium Quality',
+    description: 'A rigorous quality control system ensuring every product meets international standards',
+  },
+  {
+    icon: '⚡',
+    title: 'Fast Response',
+    description: 'We respond to your inquiries within 24 hours with professional solutions',
+  },
+  {
+    icon: '🌍',
+    title: 'Global Service',
+    description: 'Products exported to 50+ countries and regions worldwide with a comprehensive logistics network',
+  },
+  {
+    icon: '💡',
+    title: 'Technical Innovation',
+    description: 'Continuous R&D investment to deliver the most competitive products for our clients',
+  },
+];
+
+const stats = [
+  { value: '15+', label: 'Years of Experience' },
+  { value: '50+', label: 'Countries Served' },
+  { value: '1000+', label: 'Cooperative Clients' },
+  { value: '99%', label: 'Client Satisfaction' },
+];
+---
+
+<BaseLayout title="Home" settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- Organization JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+
+  <!-- WebSite JSON-LD with SearchAction -->
+  <script type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-primary-50 via-white to-secondary-50 overflow-hidden">
+    <div class="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>
+    <div class="container-custom relative">
+      <div class="py-20 md:py-32">
+        <div class="max-w-3xl">
+          <span class="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-6">
+            Professional B2B Solutions Provider
+          </span>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-secondary-900 mb-6 leading-tight">
+            Delivering
+            <span class="text-gradient">Premium Products</span>
+            & Services for Your Business
+          </h1>
+          <p class="text-lg md:text-xl text-secondary-600 mb-8 max-w-2xl">
+            We are committed to providing high-quality products and professional services to clients worldwide, empowering your business to grow sustainably.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="/contact" class="btn-primary text-lg px-8 py-4">
+              Get a Quote
+            </a>
+            <a href="/products" class="btn-outline text-lg px-8 py-4">
+              Browse Products
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="bg-secondary-900 py-12">
+    <div class="container-custom">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        {stats.map((stat) => (
+          <div class="text-center">
+            <div class="text-3xl md:text-4xl font-bold text-white mb-2">{stat.value}</div>
+            <div class="text-secondary-400">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section">
+    <div class="container-custom">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+          Why Choose Us
+        </h2>
+        <p class="text-lg text-secondary-600 max-w-2xl mx-auto">
+          Years of industry experience and a professional team dedicated to delivering the finest products and services
+        </p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {features.map((feature) => (
+          <div class="card p-6 hover:shadow-lg transition-shadow duration-300">
+            <div class="text-4xl mb-4">{feature.icon}</div>
+            <h3 class="text-xl font-semibold text-secondary-900 mb-2">{feature.title}</h3>
+            <p class="text-secondary-600">{feature.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section bg-primary-600">
+    <div class="container-custom text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+        Ready to Start a Partnership?
+      </h2>
+      <p class="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">
+        Contact us today for professional product consultation and quotation services
+      </p>
+      <a href="/contact" class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-colors">
+        Get a Quote
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,63 @@
+# ============================================
+# B2B独立站 环境变量配置
+# 复制此文件为 .dev.vars 并填入实际值
+# ============================================
+
+# ---------- 管理后台认证 (Better Auth) ----------
+# Better Auth 密钥（至少 32 位随机字符串，用于加密和签名）
+BETTER_AUTH_SECRET=your-better-auth-secret-key-at-least-32-chars
+# Better Auth 基础 URL（当前站点完整 URL）
+BETTER_AUTH_URL=https://cms.xxxx.com
+
+# ---------- Cloudflare Turnstile ----------
+# 在 https://dash.cloudflare.com/turnstile 创建
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
+# ---------- 邮件通知 ----------
+# 管理员邮箱（接收询价和评论通知）
+ADMIN_EMAIL=sales@yourcompany.com
+
+# Resend邮件服务 (https://resend.com)
+# 主邮件通道（Mailchannels已于2024年6月停止免费服务）
+RESEND_API_KEY=re_xxxxxxxxxx
+
+# ---------- 即时通讯通知 ----------
+# Telegram Bot (通过 @BotFather 创建)
+TELEGRAM_BOT_TOKEN=123456:ABC-DEF
+TELEGRAM_CHAT_ID=-1001234567890
+
+# 企业微信机器人Webhook
+WECOM_WEBHOOK_URL=https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx
+
+# ---------- R2存储 ----------
+R2_ACCESS_KEY_ID=xxx
+R2_SECRET_ACCESS_KEY=xxx
+R2_ACCOUNT_ID=xxx
+R2_BUCKET=b2b-media
+
+# ---------- 域名配置 ----------
+# 前台域名
+PUBLIC_SITE_URL=https://xxxx.com
+# 后台CMS域名
+CMS_SITE_URL=https://cms.xxxx.com
+# R2公开访问自定义域名（开启Public Access后绑定）
+R2_PUBLIC_DOMAIN=media.xxxx.com
+
+# ---------- Turnstile前端 (公开) ----------
+PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
+
+# ---------- Cron备份 ----------
+# D1数据库自动备份鉴权密钥（随机字符串，用于 /api/cron/backup 端点）
+CRON_SECRET=your-random-cron-secret-here
+
+# ---------- Keystatic CMS ----------
+# GitHub模式配置（生产环境 CF_PAGES=1 时自动启用）
+GITHUB_OWNER=your-github-username
+GITHUB_REPO=b2b-website
+GITHUB_BRANCH=main
+
+# GitHub OAuth App（运行 npm run keystatic:setup 自动生成）
+# KEYSTATIC_GITHUB_CLIENT_ID=
+# KEYSTATIC_GITHUB_CLIENT_SECRET=
+# KEYSTATIC_SECRET=
+# PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=

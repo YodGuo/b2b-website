@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { requireCmsHost } from '../../lib/routing';
+import { getServerSession } from '../../lib/auth';
+
+export const prerender = false;
+
+// ========== 域名守卫：仅允许 cms.xxxx.com 访问 ==========
+const cmsGuard = requireCmsHost(Astro.request);
+if (cmsGuard) return cmsGuard;
+
+// 已登录则重定向到管理面板
+const db = Astro.locals.runtime?.env?.DB;
+if (db) {
+  const session = await getServerSession(Astro.request, db);
+  if (session?.user) {
+    return Astro.redirect('/admin');
+  }
+}
+
+const url = new URL(Astro.request.url);
+const hasError = url.searchParams.get('error') === '1';
+---
+
+<BaseLayout title="管理员登录">
+  <section class="min-h-screen flex items-center justify-center bg-secondary-50 py-12">
+    <div class="w-full max-w-md">
+      <div class="card p-8">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h1 class="text-2xl font-bold text-secondary-900">管理后台</h1>
+          <p class="text-secondary-500 mt-2">请输入管理员邮箱和密码登录</p>
+        </div>
+
+        <!-- 错误提示 -->
+        {hasError && (
+          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-center text-sm">
+            邮箱或密码错误，请重试
+          </div>
+        )}
+
+        <!-- 登录表单 -->
+        <form id="login-form" class="space-y-6">
+          <div>
+            <label for="email" class="label">管理员邮箱</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              autofocus
+              class="input"
+              placeholder="admin@yourcompany.com"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="label">密码</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              class="input"
+              placeholder="请输入密码"
+            />
+          </div>
+
+          <div id="error-msg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+
+          <button type="submit" id="submit-btn" class="w-full btn-primary py-3 text-lg">
+            登 录
+          </button>
+        </form>
+
+        <!-- 安全提示 -->
+        <div class="mt-6 p-4 bg-secondary-50 rounded-lg">
+          <p class="text-xs text-secondary-500 text-center">
+            🔒 Powered by Better Auth · JWE 加密 Session · 无数据库依赖
+          </p>
+        </div>
+      </div>
+
+      <!-- 返回网站 -->
+      <div class="text-center mt-6">
+        <a href="/" class="text-sm text-secondary-500 hover:text-primary-600 transition-colors">
+          ← 返回网站首页
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('login-form') as HTMLFormElement;
+  const errorMsg = document.getElementById('error-msg') as HTMLDivElement;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = '登录中...';
+    errorMsg.classList.add('hidden');
+
+    const email = (document.getElementById('email') as HTMLInputElement).value;
+    const password = (document.getElementById('password') as HTMLInputElement).value;
+
+    try {
+      const res = await fetch('/api/auth/sign-in/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (res.ok) {
+        window.location.href = '/admin';
+      } else {
+        const data = await res.json();
+        errorMsg.textContent = data.error || '邮箱或密码错误，请重试';
+        errorMsg.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '登 录';
+      }
+    } catch {
+      errorMsg.textContent = '网络错误，请重试';
+      errorMsg.classList.remove('hidden');
+      submitBtn.disabled = false;
+      submitBtn.textContent = '登 录';
+    }
+  });
+</script>

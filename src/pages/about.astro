@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import { getSettings } from '../lib/settings';
+
+const settings = await getSettings();
+---
+
+<BaseLayout title="About Us" description="Learn about our company history, team, and corporate culture" settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- Page Header -->
+  <section class="bg-gradient-to-br from-primary-50 to-white py-12 md:py-20">
+    <div class="container-custom">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-4">
+          About Us
+        </h1>
+        <p class="text-lg text-secondary-600">
+          Professional, Reliable, and Innovative B2B Solutions Provider
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company Story -->
+  <section class="section">
+    <div class="container-custom">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-secondary-900 mb-6">Our Story</h2>
+          <p class="text-secondary-600 mb-4">
+            Since our establishment in 2010, we have been dedicated to providing high-quality B2B products and services to clients worldwide.
+            Over the years, we have grown into a trusted partner within the industry.
+          </p>
+          <p class="text-secondary-600 mb-4">
+            Our success stems from an unwavering commitment to quality, a deep understanding of our clients' needs,
+            and continuous technological innovation.
+          </p>
+          <p class="text-secondary-600">
+            Today, our products and services reach over 50 countries and regions worldwide,
+            serving more than 1,000 corporate clients.
+          </p>
+        </div>
+        <div class="bg-gradient-to-br from-primary-100 to-primary-50 rounded-2xl p-8">
+          <div class="grid grid-cols-2 gap-6">
+            <div class="text-center">
+              <div class="text-4xl font-bold text-primary-600">15+</div>
+              <div class="text-secondary-600">Years of Experience</div>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold text-primary-600">50+</div>
+              <div class="text-secondary-600">Countries Served</div>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold text-primary-600">1000+</div>
+              <div class="text-secondary-600">Cooperative Clients</div>
+            </div>
+            <div class="text-center">
+              <div class="text-4xl font-bold text-primary-600">99%</div>
+              <div class="text-secondary-600">Client Satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section bg-secondary-50">
+    <div class="container-custom">
+      <h2 class="text-3xl font-bold text-secondary-900 text-center mb-12">Our Values</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="card p-6 text-center">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-secondary-900 mb-2">Quality First</h3>
+          <p class="text-secondary-600">
+            We adhere to strict quality control standards, ensuring every product meets international certification requirements.
+          </p>
+        </div>
+
+        <div class="card p-6 text-center">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-secondary-900 mb-2">Client-Centric</h3>
+          <p class="text-secondary-600">
+            Our clients' needs are the starting point of everything we do. We are committed to building long-term partnerships.
+          </p>
+        </div>
+
+        <div class="card p-6 text-center">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-secondary-900 mb-2">Continuous Innovation</h3>
+          <p class="text-secondary-600">
+            We continuously invest in R&D to deliver more competitive products and solutions for our clients.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section bg-primary-600">
+    <div class="container-custom text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">Ready to Start a Partnership?</h2>
+      <p class="text-lg text-primary-100 mb-8">
+        Contact us today for professional product consultation and quotation services
+      </p>
+      <a href="/contact" class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-colors">
+        Get a Quote
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

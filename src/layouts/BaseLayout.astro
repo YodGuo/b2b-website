@@ -1,0 +1,89 @@
+---
+import '../styles/global.css';
+import { LegalConsentModal } from '../components/common/LegalConsentModal';
+import ContactWidget from '../components/common/ContactWidget.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  settings?: {
+    companyName?: string;
+    siteDescription?: string;
+    ogImage?: string;
+    googleAnalyticsId?: string;
+    googleSiteVerification?: string;
+    favicon?: string;
+    whatsapp?: string;
+  };
+}
+
+const { title, description, image, settings } = Astro.props;
+
+const siteName = settings?.companyName || 'Company';
+const siteDescription = description || settings?.siteDescription || 'Professional B2B Solutions Provider';
+const ogImage = image || settings?.ogImage || '/og-image.jpg';
+const gaId = settings?.googleAnalyticsId || '';
+const siteVerification = settings?.googleSiteVerification || '';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://yourdomain.com';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const favicon = settings?.favicon || '/favicon.svg';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href={favicon} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- SEO -->
+    <title>{title} | {siteName}</title>
+    <meta name="description" content={siteDescription} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Google Site Verification -->
+    {siteVerification && <meta name="google-site-verification" content={siteVerification} />}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={`${title} | ${siteName}`} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:image" content={`${siteUrl}${ogImage}`} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content={siteName} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | ${siteName}`} />
+    <meta name="twitter:description" content={siteDescription} />
+    <meta name="twitter:image" content={`${siteUrl}${ogImage}`} />
+
+    <!-- Google Analytics -->
+    {gaId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+        <script set:html={`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaId}');
+        `} />
+      </>
+    )}
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <slot name="header" />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <slot name="footer" />
+    <ContactWidget whatsapp={settings?.whatsapp || ''} />
+    <LegalConsentModal client:idle />
+  </body>
+</html>

@@ -1,0 +1,250 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/common/Header.astro';
+import Footer from '../../components/common/Footer.astro';
+import { getCollection, render } from 'astro:content';
+import { getSettings } from '../../lib/settings';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products', ({ data }) => data.published);
+  return products.map((product) => ({
+    params: { slug: product.id },
+    props: { product },
+  }));
+}
+
+const settings = await getSettings();
+const { product } = Astro.props;
+const { Content } = await render(product);
+
+// JSON-LD 结构化数据
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://yourdomain.com';
+
+const productImages = [
+  product.data.coverImage,
+  ...product.data.images,
+].filter(Boolean);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": product.data.title,
+  "description": product.data.description,
+  "image": productImages.length > 0 ? productImages : undefined,
+  "category": product.data.category,
+  "brand": {
+    "@type": "Brand",
+    "name": "Company",
+    "url": siteUrl,
+  },
+  "url": `${siteUrl}/products/${product.id}`,
+  ...(product.data.sku ? { "sku": product.data.sku } : {}),
+  ...(product.data.tags.length > 0 ? { "keywords": product.data.tags.join(', ') } : {}),
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    ...(product.data.price ? { "price": product.data.price } : { "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "USD", "valueAddedTaxIncluded": true } }),
+    ...(product.data.moq ? { "eligibleQuantity": { "@type": "QuantitativeValue", "minValue": parseInt(product.data.moq) || 1, "unitCode": "C62" } } : {}),
+  },
+  ...(product.data.specifications.length > 0 ? {
+    "additionalProperty": product.data.specifications.map(spec => ({
+      "@type": "PropertyValue",
+      "name": spec.name,
+      "value": spec.value,
+    })),
+  } : {}),
+};
+---
+
+<BaseLayout title={`${product.data.title} | 产品详情`} description={product.data.description} settings={settings}>
+  <Header slot="header" />
+  <Footer slot="footer" />
+
+  <!-- JSON-LD 结构化数据 -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- Breadcrumb -->
+  <nav class="bg-secondary-50 border-b border-secondary-100">
+    <div class="container-custom py-3">
+      <ol class="flex items-center space-x-2 text-sm text-secondary-500">
+        <li><a href="/" class="hover:text-primary-600">首页</a></li>
+        <li>/</li>
+        <li><a href="/products" class="hover:text-primary-600">产品中心</a></li>
+        <li>/</li>
+        <li class="text-secondary-900 font-medium">{product.data.title}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Product Detail -->
+  <section class="section">
+    <div class="container-custom">
+      <div class="grid lg:grid-cols-2 gap-12">
+        <!-- Product Images -->
+        <div>
+          {/* Main Image */}
+          <div class="card overflow-hidden mb-4">
+            {product.data.coverImage ? (
+              <img
+                id="main-image"
+                src={product.data.coverImage}
+                alt={product.data.title}
+                class="w-full aspect-square object-cover"
+              />
+            ) : (
+              <div class="w-full aspect-square bg-gradient-to-br from-primary-100 to-primary-50 flex items-center justify-center">
+                <svg class="w-24 h-24 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+            )}
+          </div>
+
+          {/* Gallery Thumbnails */}
+          {product.data.images.length > 1 && (
+            <div class="grid grid-cols-4 gap-3">
+              {product.data.images.map((img, i) => (
+                <button
+                  class={`card overflow-hidden cursor-pointer border-2 ${i === 0 ? 'border-primary-500' : 'border-transparent hover:border-primary-300'}`}
+                  onclick={`document.getElementById('main-image').src='${img}'`}
+                >
+                  <img src={img} alt={`${product.data.title} ${i + 1}`} class="w-full aspect-square object-cover" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Product Info -->
+        <div>
+          <span class="inline-block px-3 py-1 bg-primary-50 text-primary-600 text-sm font-medium rounded-full mb-4">
+            {product.data.category}
+          </span>
+
+          <h1 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+            {product.data.title}
+          </h1>
+
+          <p class="text-lg text-secondary-600 mb-6">
+            {product.data.description}
+          </p>
+
+          {/* Quick Info */}
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            {product.data.moq && (
+              <div class="bg-secondary-50 rounded-lg p-4">
+                <p class="text-sm text-secondary-500">最小起订量</p>
+                <p class="font-semibold text-secondary-900">{product.data.moq}</p>
+              </div>
+            )}
+            {product.data.leadTime && (
+              <div class="bg-secondary-50 rounded-lg p-4">
+                <p class="text-sm text-secondary-500">交货周期</p>
+                <p class="font-semibold text-secondary-900">{product.data.leadTime}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Features */}
+          {product.data.features.length > 0 && (
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-secondary-900 mb-3">产品特点</h3>
+              <ul class="space-y-2">
+                {product.data.features.map((feature) => (
+                  <li class="flex items-center text-secondary-700">
+                    <svg class="w-5 h-5 text-primary-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Specifications */}
+          {product.data.specifications.length > 0 && (
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-secondary-900 mb-3">技术规格</h3>
+              <div class="border border-secondary-200 rounded-lg overflow-hidden">
+                {product.data.specifications.map((spec, i) => (
+                  <div class={`flex ${i % 2 === 0 ? 'bg-white' : 'bg-secondary-50'}`}>
+                    <div class="w-1/3 px-4 py-3 text-sm text-secondary-500 border-r border-secondary-200">
+                      {spec.name}
+                    </div>
+                    <div class="w-2/3 px-4 py-3 text-sm text-secondary-900 font-medium">
+                      {spec.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* CTA */}
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href={`/contact?product=${encodeURIComponent(product.data.title)}`}
+              class="btn-primary text-lg px-8 py-4 flex-1 text-center"
+            >
+              立即询价
+            </a>
+            {product.data.specSheet && (
+              <a
+                href={product.data.specSheet}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-outline text-lg px-8 py-4 flex-1 text-center"
+              >
+                下载规格书
+              </a>
+            )}
+          </div>
+
+          {/* Tags */}
+          {product.data.tags.length > 0 && (
+            <div class="mt-6 flex flex-wrap gap-2">
+              {product.data.tags.map((tag) => (
+                <span class="px-3 py-1 bg-secondary-100 text-secondary-600 text-sm rounded-full">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Product Content (Markdown) -->
+      <div class="mt-16 max-w-4xl mx-auto">
+        <div class="prose prose-lg prose-secondary max-w-none
+          prose-headings:font-display prose-headings:font-bold
+          prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
+          prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
+          prose-p:text-secondary-700 prose-p:leading-relaxed
+          prose-li:text-secondary-700
+          prose-strong:text-secondary-900
+          prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline
+        ">
+          <Content />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Products CTA -->
+  <section class="section bg-primary-600">
+    <div class="container-custom text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">对产品感兴趣？</h2>
+      <p class="text-lg text-primary-100 mb-8">
+        联系我们获取详细报价和技术支持
+      </p>
+      <a href="/contact" class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-lg hover:bg-primary-50 transition-colors">
+        立即询价
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

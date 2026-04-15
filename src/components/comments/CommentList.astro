@@ -1,0 +1,106 @@
+---
+import type { CommentWithReplies } from '../../lib/db/types';
+
+interface CommentListProps {
+  comments: CommentWithReplies[];
+  newsId: number;
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes} min ago`;
+  if (hours < 24) return `${hours} hr ago`;
+  if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+
+  return date.toLocaleDateString('en-US');
+}
+
+const { comments, newsId } = Astro.props;
+---
+
+<div class="space-y-6" id="comments-list">
+  {comments.length === 0 ? (
+    <div class="text-center py-8 text-secondary-500">
+      <p>No comments yet. Be the first to leave a comment!</p>
+    </div>
+  ) : (
+    comments.map((comment) => (
+      <div class="relative">
+        <div class="flex items-start space-x-3 mb-3">
+          {/* Avatar */}
+          <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <span class="text-primary-600 font-semibold">
+              {comment.author_name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            {/* Author and time */}
+            <div class="flex items-center space-x-2 mb-1">
+              <span class="font-semibold text-secondary-900">{comment.author_name}</span>
+              <span class="text-xs text-secondary-400">{formatDate(comment.created_at)}</span>
+            </div>
+
+            {/* Content */}
+            <p class="text-secondary-700 whitespace-pre-wrap break-words">{comment.content}</p>
+
+            {/* Reply button - only show for root comments */}
+            <button
+              class="text-sm text-primary-600 hover:text-primary-700 mt-2 reply-btn"
+              data-comment-id={comment.id}
+              data-author-name={comment.author_name}
+            >
+              Reply
+            </button>
+          </div>
+        </div>
+
+        {/* Replies */}
+        {comment.replies && comment.replies.length > 0 && (
+          <div class="ml-8 pl-4 border-l-2 border-secondary-100 space-y-4 mt-4">
+            {comment.replies.map((reply) => (
+              <div class="relative">
+                <div class="flex items-start space-x-3 mb-3">
+                  <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-primary-600 font-semibold">
+                      {reply.author_name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center space-x-2 mb-1">
+                      <span class="font-semibold text-secondary-900">{reply.author_name}</span>
+                      <span class="text-xs text-secondary-400">{formatDate(reply.created_at)}</span>
+                    </div>
+                    <p class="text-secondary-700 whitespace-pre-wrap break-words">{reply.content}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ))
+  )}
+</div>
+
+<script>
+  document.querySelectorAll('.reply-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLElement;
+      const commentId = target.dataset.commentId;
+      const authorName = target.dataset.authorName;
+
+      document.dispatchEvent(new CustomEvent('reply-to-comment', {
+        detail: { commentId, authorName }
+      }));
+    });
+  });
+</script>

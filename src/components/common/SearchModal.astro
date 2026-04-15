@@ -1,0 +1,12 @@
+---
+/**
+ * SearchModal wrapper - bridges Astro and React
+ * The actual modal is in SearchModal.tsx (React component)
+ * This wrapper provides the Astro interface
+ */
+import { SearchModal } from './SearchModal';
+
+// In Astro, React components with client:load are used directly
+// The parent Header.astro already includes <SearchModal client:load />
+// This file exists for organizational clarity
+export { SearchModal };
