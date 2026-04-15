@@ -3,7 +3,6 @@
   "name": "b2b-website",
   "compatibility_date": "2025-04-14",
   "compatibility_flags": ["nodejs_compat"],
-  "zone_id": "your-zone-id-here",
   "vars": {
     "ENVIRONMENT": "production",
     "TURNSTILE_SITE_KEY": "your-turnstile-site-key",
@@ -66,11 +65,13 @@
   "routes": [
     {
       "pattern": "xxxx.com",
-      "custom_domain": true
+      "custom_domain": true,
+      "zone_id": "your-zone-id-here"
     },
     {
       "pattern": "cms.xxxx.com",
-      "custom_domain": true
+      "custom_domain": true,
+      "zone_id": "your-zone-id-here"
     }
   ]
 }
