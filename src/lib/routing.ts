@@ -15,18 +15,28 @@ const CMS_HOSTNAMES = ['cms.xxxx.com', 'localhost', '127.0.0.1'];
 // 前台域名
 const PUBLIC_HOSTNAMES = ['xxxx.com', 'www.xxxx.com'];
 
+// Debug 域名 (workers.dev) - 同时支持前台和后台访问
+const DEBUG_HOSTNAMES = ['.workers.dev'];
+
+/**
+ * 判断是否为Debug域名
+ */
+export function isDebugHost(hostname: string): boolean {
+  return DEBUG_HOSTNAMES.some(suffix => hostname.endsWith(suffix));
+}
+
 /**
  * 判断是否为CMS域名
  */
 export function isCmsHost(hostname: string): boolean {
-  return CMS_HOSTNAMES.includes(hostname);
+  return CMS_HOSTNAMES.includes(hostname) || isDebugHost(hostname);
 }
 
 /**
  * 判断是否为前台域名
  */
 export function isPublicHost(hostname: string): boolean {
-  return PUBLIC_HOSTNAMES.includes(hostname);
+  return PUBLIC_HOSTNAMES.includes(hostname) || isDebugHost(hostname);
 }
 
 /**
