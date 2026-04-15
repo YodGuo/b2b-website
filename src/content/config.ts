@@ -42,7 +42,7 @@ const news = defineCollection({
 
 // 站点全局设置（Keystatic singleton）
 const settings = defineCollection({
-  type: 'data',
+  type: 'content',
   schema: z.object({
     companyName: z.string().default('Company'),
     companySlogan: z.string().default(''),

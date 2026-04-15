@@ -53,10 +53,7 @@
       }
     ]
   },
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist"
-  },
+
   "observability": {
     "enabled": true
   },
