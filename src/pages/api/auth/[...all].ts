@@ -7,8 +7,8 @@ import { createAuth } from '../../../lib/auth';
  */
 export const prerender = false;
 
-export const GET: APIRoute = async ({ request }) => {
-  const db = Astro.locals.runtime?.env?.DB;
+export const GET: APIRoute = async ({ request, locals }) => {
+  const db = locals.runtime?.env?.DB;
   if (!db) {
     return new Response('Database not available', { status: 503 });
   }
@@ -16,8 +16,8 @@ export const GET: APIRoute = async ({ request }) => {
   return auth.handler(request);
 };
 
-export const POST: APIRoute = async ({ request }) => {
-  const db = Astro.locals.runtime?.env?.DB;
+export const POST: APIRoute = async ({ request, locals }) => {
+  const db = locals.runtime?.env?.DB;
   if (!db) {
     return new Response('Database not available', { status: 503 });
   }
