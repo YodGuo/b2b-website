@@ -13,25 +13,25 @@ import { requireCmsHost } from '../../../lib/routing';
  */
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   // 域名守卫
   const cmsGuard = requireCmsHost(request);
   if (cmsGuard) return cmsGuard;
 
   // Bearer Token 鉴权
   const authHeader = request.headers.get('Authorization');
-  const secret = Astro.locals.runtime?.env?.BETTER_AUTH_SECRET;
+  const secret = locals.runtime?.env?.BETTER_AUTH_SECRET;
 
   if (!authHeader || !authHeader.startsWith('Bearer ') || authHeader.slice(7) !== secret) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {  
       status: 401,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  const db = Astro.locals.runtime?.env?.DB;
+  const db = locals.runtime?.env?.DB;
   if (!db) {
-    return new Response(JSON.stringify({ error: 'Database not available' }), {
+    return new Response(JSON.stringify({ error: 'Database not available' }), {  
       status: 503,
       headers: { 'Content-Type': 'application/json' },
     });

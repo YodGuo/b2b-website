@@ -53,6 +53,7 @@ declare namespace App {
   interface Locals {
     runtime: {
       env: Env;
+      request: Request;
     };
   }
 }
